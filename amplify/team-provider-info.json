@@ -10,6 +10,11 @@
       "StackName": "amplify-amplifytodogen1-prod-7b98f",
       "StackId": "arn:aws:cloudformation:us-east-1:185706627232:stack/amplify-amplifytodogen1-prod-7b98f/e13d7f90-9cab-11f0-b577-12111210a643",
       "AmplifyAppId": "d135fqmv4edoy1"
+    },
+    "categories": {
+      "api": {
+        "amplifytodogen1": {}
+      }
     }
   }
 }
