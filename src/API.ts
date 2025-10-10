@@ -34,18 +34,20 @@ export type ModelStringInput = {
   size?: ModelSizeInput | null,
 };
 
-export enum ModelAttributeTypes {
-  binary = "binary",
-  binarySet = "binarySet",
-  bool = "bool",
-  list = "list",
-  map = "map",
-  number = "number",
-  numberSet = "numberSet",
-  string = "string",
-  stringSet = "stringSet",
-  _null = "_null",
-}
+export const ModelAttributeTypes = {
+  binary: "binary",
+  binarySet: "binarySet",
+  bool: "bool",
+  list: "list",
+  map: "map",
+  number: "number",
+  numberSet: "numberSet",
+  string: "string",
+  stringSet: "stringSet",
+  _null: "_null",
+} as const;
+
+export type ModelAttributeTypes = typeof ModelAttributeTypes[keyof typeof ModelAttributeTypes];
 
 
 export type ModelSizeInput = {
