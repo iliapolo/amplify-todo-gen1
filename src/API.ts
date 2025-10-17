@@ -34,20 +34,7 @@ export type ModelStringInput = {
   size?: ModelSizeInput | null,
 };
 
-export const ModelAttributeTypes = {
-  binary: "binary",
-  binarySet: "binarySet",
-  bool: "bool",
-  list: "list",
-  map: "map",
-  number: "number",
-  numberSet: "numberSet",
-  string: "string",
-  stringSet: "stringSet",
-  _null: "_null",
-} as const;
-
-export type ModelAttributeTypes = typeof ModelAttributeTypes[keyof typeof ModelAttributeTypes];
+export type ModelAttributeTypes = "binary" | "binarySet" | "bool" | "list" | "map" | "number" | "numberSet" | "string" | "stringSet" | "_null";
 
 
 export type ModelSizeInput = {
