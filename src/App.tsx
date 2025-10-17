@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
 
 import { generateClient } from 'aws-amplify/api';
-
+import { withAuthenticator, Button, Heading } from '@aws-amplify/ui-react';
+import '@aws-amplify/ui-react/styles.css';
+import { type AuthUser } from "aws-amplify/auth";
+import { type UseAuthenticator } from "@aws-amplify/ui-react-core";
 import { createTodo } from './graphql/mutations';
 import { listTodos } from './graphql/queries';
 import { type CreateTodoInput, type Todo } from './API';
@@ -9,73 +12,9 @@ import { type CreateTodoInput, type Todo } from './API';
 const initialState: CreateTodoInput = { name: '', description: '' };
 const client = generateClient();
 
-const App = () => {
-  const [formState, setFormState] = useState<CreateTodoInput>(initialState);
-  const [todos, setTodos] = useState<Todo[] | CreateTodoInput[]>([]);
-
-  useEffect(() => {
-    fetchTodos();
-  }, []);
-
-  async function fetchTodos() {
-    try {
-      const todoData = await client.graphql({
-        query: listTodos,
-      });
-      const todos = todoData.data.listTodos.items;
-      setTodos(todos);
-    } catch (err) {
-      console.log('error fetching todos');
-    }
-  }
-
-  async function addTodo() {
-    try {
-      if (!formState.name || !formState.description) return;
-      const todo = { ...formState };
-      setTodos([...todos, todo]);
-      setFormState(initialState);
-      await client.graphql({
-        query: createTodo,
-        variables: {
-          input: todo,
-        },
-      });
-    } catch (err) {
-      console.log('error creating todo:', err);
-    }
-  }
-
-  return (
-    <div style={styles.container}>
-      <h2>Amplify Todos</h2>
-      <input
-        onChange={(event) =>
-          setFormState({ ...formState, name: event.target.value })
-        }
-        style={styles.input}
-        value={formState.name}
-        placeholder="Name"
-      />
-      <input
-        onChange={(event) =>
-          setFormState({ ...formState, description: event.target.value })
-        }
-        style={styles.input}
-        value={formState.description as string}
-        placeholder="Description"
-      />
-      <button style={styles.button} onClick={addTodo}>
-        Create Todo
-      </button>
-      {todos.map((todo, index) => (
-        <div key={todo.id ? todo.id : index} style={styles.todo}>
-          <p style={styles.todoName}>{todo.name}</p>
-          <p style={styles.todoDescription}>{todo.description}</p>
-        </div>
-      ))}
-    </div>
-  );
+type AppProps = {
+  signOut?: UseAuthenticator["signOut"]; //() => void;
+  user?: AuthUser;
 };
 
 const styles = {
@@ -105,5 +44,76 @@ const styles = {
     padding: "12px 0px",
   },
 } as const;
+
+const App = withAuthenticator((props: AppProps) => {
+  const [formState, setFormState] = useState<CreateTodoInput>(initialState);
+  const [todos, setTodos] = useState<Todo[] | CreateTodoInput[]>([]);
+
+  useEffect(() => {
+    fetchTodos();
+  }, []);
+
+  async function fetchTodos() {
+    try {
+      const todoData = await client.graphql({
+        query: listTodos,
+      });
+      const todos = todoData.data.listTodos.items;
+      setTodos(todos);
+    } catch (err: unknown) {
+      console.log(`error fetching todos: ${err}`);
+    }
+  }
+
+  async function addTodo() {
+    try {
+      if (!formState.name || !formState.description) return;
+      const todo = { ...formState };
+      setTodos([...todos, todo]);
+      setFormState(initialState);
+      await client.graphql({
+        query: createTodo,
+        variables: {
+          input: todo,
+        },
+      });
+    } catch (err) {
+      console.log('error creating todo:', err);
+    }
+  }
+
+  return (
+    <div style={styles.container}>
+      <Heading level={1}>Hello {props.user!.username}</Heading>
+      <Button onClick={props.signOut}>Sign out</Button>
+      <h2>Amplify Todos</h2>
+      <input
+        onChange={(event) =>
+          setFormState({ ...formState, name: event.target.value })
+        }
+        style={styles.input}
+        value={formState.name}
+        placeholder="Name"
+      />
+      <input
+        onChange={(event) =>
+          setFormState({ ...formState, description: event.target.value })
+        }
+        style={styles.input}
+        value={formState.description as string}
+        placeholder="Description"
+      />
+      <button style={styles.button} onClick={addTodo}>
+        Create Todo
+      </button>
+      {todos.map((todo, index) => (
+        <div key={todo.id ? todo.id : index} style={styles.todo}>
+          <p style={styles.todoName}>{todo.name}</p>
+          <p style={styles.todoDescription}>{todo.description}</p>
+        </div>
+      ))}
+    </div>
+  );
+});
 
 export default App;
