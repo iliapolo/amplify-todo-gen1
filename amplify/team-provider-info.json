@@ -17,6 +17,9 @@
       },
       "auth": {
         "amplifytodogen1be5ccb9d": {}
+      },
+      "custom": {
+        "mycustomqueue": {}
       }
     }
   }
