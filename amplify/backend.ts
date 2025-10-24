@@ -43,4 +43,4 @@ const userPoolClient = userPool.addClient("NativeAppClient", {
     refreshTokenValidity: Duration.days(30),
     generateSecret: false
 });
-// Tags.of(backend.stack).add("gen1-migrated-app", "true");
+Tags.of(backend.stack).add("gen1-migrated-app", "true");
