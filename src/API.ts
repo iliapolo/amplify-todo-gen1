@@ -34,7 +34,18 @@ export type ModelStringInput = {
   size?: ModelSizeInput | null,
 };
 
-export type ModelAttributeTypes = "binary" | "binarySet" | "bool" | "list" | "map" | "number" | "numberSet" | "string" | "stringSet" | "_null";
+export enum ModelAttributeTypes {
+  binary = "binary",
+  binarySet = "binarySet",
+  bool = "bool",
+  list = "list",
+  map = "map",
+  number = "number",
+  numberSet = "numberSet",
+  string = "string",
+  stringSet = "stringSet",
+  _null = "_null",
+}
 
 
 export type ModelSizeInput = {

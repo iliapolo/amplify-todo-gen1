@@ -1,6 +1,7 @@
 export type AmplifyDependentResourcesAttributes = {
   "api": {
     "amplifytodogen1": {
+      "DataSourceMappingOutput": "string",
       "GraphQLAPIEndpointOutput": "string",
       "GraphQLAPIIdOutput": "string",
       "GraphQLAPIKeyOutput": "string"
